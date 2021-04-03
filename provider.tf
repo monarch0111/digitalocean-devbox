@@ -49,7 +49,6 @@ provider "cloudflare" {
   api_key = var.cloudflare_api_key
 }
 
-# Configure the GitHub Provider
 provider "github" {
   token = var.github_token
 }

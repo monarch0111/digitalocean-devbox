@@ -20,7 +20,7 @@ resource "digitalocean_droplet" "devbox" {
     destination = "/root/.ssh/id_rsa"
   }
   provisioner "file" {
-    content     = tls_private_key.server_ssh_keypair.public_key_pem
+    content     = tls_private_key.server_ssh_keypair.public_key_openssh
     destination = "/root/.ssh/id_rsa.pub"
   }
   provisioner "remote-exec" {
