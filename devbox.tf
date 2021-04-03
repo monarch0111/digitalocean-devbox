@@ -8,6 +8,26 @@ resource "digitalocean_droplet" "devbox" {
     digitalocean_ssh_key.terraform.fingerprint
   ]
   user_data = file("./setup/devbox.sh")
+  connection {
+    host        = digitalocean_droplet.devbox.ipv4_address
+    user        = "root"
+    type        = "ssh"
+    private_key = file(var.pvt_key_path)
+    timeout     = "2m"
+  }
+  provisioner "file" {
+    content     = tls_private_key.server_ssh_keypair.private_key_pem
+    destination = "/root/.ssh/id_rsa"
+  }
+  provisioner "file" {
+    content     = tls_private_key.server_ssh_keypair.public_key_pem
+    destination = "/root/.ssh/id_rsa.pub"
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 400 ~/.ssh/id_rsa"
+    ]
+  }
 }
 
 resource "digitalocean_firewall" "devbox_firewall" {
